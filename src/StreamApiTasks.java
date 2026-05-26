@@ -76,7 +76,7 @@ public class StreamApiTasks {
     }
 
     static List<String> activeOrderIds(List<Order> orders) {
-        // TODO: task 1
+        // task 1
 
         return orders.stream()
                 .filter(order -> order.status() != OrderStatus.CANCELLED)
@@ -85,7 +85,7 @@ public class StreamApiTasks {
     }
 
     static List<Order> ordersAbove(List<Order> orders, double minValue) {
-        // TODO: task 2
+        // task 2
         return orders.stream()
                 .filter(order -> order.totalValue() > minValue)
                 .sorted(Comparator.comparingDouble(Order::totalValue).reversed())
@@ -93,7 +93,7 @@ public class StreamApiTasks {
     }
 
     static List<String> uniqueCustomerNames(List<Order> orders) {
-        // TODO: task 3
+        // task 3
         return orders.stream()
                 .map(Order::customerName)
                 .distinct()
@@ -102,7 +102,7 @@ public class StreamApiTasks {
     }
 
     static List<String> soldProductNames(List<Order> orders) {
-        // TODO: task 4
+        // task 4
         return orders.stream()
                 .filter(order -> order.status() != OrderStatus.CANCELLED)
                 .flatMap(order -> order.items.stream())
@@ -113,7 +113,7 @@ public class StreamApiTasks {
     }
 
     static double totalRevenue(List<Order> orders) {
-        // TODO: task 5
+        // task 5
         return orders.stream()
                 .filter(order -> order.status() != OrderStatus.CANCELLED)
                 .mapToDouble(Order::totalValue)
@@ -121,7 +121,7 @@ public class StreamApiTasks {
     }
 
     static OptionalDouble averageDeliveredOrderValue(List<Order> orders) {
-        // TODO: task 6
+        // task 6
         return orders.stream()
                 .filter(order -> order.status() != OrderStatus.CANCELLED)
                 .mapToDouble(Order::totalValue)
@@ -129,13 +129,13 @@ public class StreamApiTasks {
     }
 
     static Map<OrderStatus, Long> countByStatus(List<Order> orders) {
-        // TODO: task 7
+        // task 7
         return orders.stream()
                 .collect(Collectors.groupingBy(Order::status, Collectors.counting()));
     }
 
     static Map<String, Double> revenueByCategory(List<Order> orders) {
-        // TODO: task 8
+        // task 8
         return orders.stream()
                 .filter(order -> order.status() != OrderStatus.CANCELLED)
                 .flatMap(order -> order.items().stream())
@@ -155,7 +155,7 @@ public class StreamApiTasks {
     }
 
     static Optional<Order> mostExpensiveDeliveredOrder(List<Order> orders) {
-        // TODO: task 11
+        //  task 11
         return orders.stream()
                 .filter(order -> order.status() == OrderStatus.DELIVERED)
                 .max(Comparator.comparingDouble(Order::totalValue));
