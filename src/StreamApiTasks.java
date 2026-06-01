@@ -123,7 +123,7 @@ public class StreamApiTasks {
     static OptionalDouble averageDeliveredOrderValue(List<Order> orders) {
         // task 6
         return orders.stream()
-                .filter(order -> order.status() != OrderStatus.CANCELLED)
+                .filter(order -> order.status() == OrderStatus.DELIVERED) // Verify this status
                 .mapToDouble(Order::totalValue)
                 .average();
     }
@@ -143,15 +143,30 @@ public class StreamApiTasks {
     }
 
     static Map<String, Double> topCustomers(List<Order> orders, int limit) {
-        // TODO: task 9
-        return Map.of();
+        return orders.stream()
+                .filter(o -> o.status() != OrderStatus.CANCELLED)
+                .collect(Collectors.groupingBy(
+                        Order::customerName,
+                        Collectors.summingDouble(Order::totalValue)
+                ))
+                .entrySet().stream()
+                .sorted(Map.Entry.<String, Double>comparingByValue().reversed())
+                .limit(limit)
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1,
+                        LinkedHashMap::new
+                ));
     }
 
     static Map<Boolean, List<Order>> partitionActiveOrdersByValue(List<Order> orders, double threshold) {
         // TODO: task 10 redo
         return orders.stream()
-                .filter(order -> order.status() != OrderStatus.CANCELLED)
-                .collect(Collectors.partitioningBy(order -> order.totalValue() >= threshold));
+                .filter(o -> o.status() != OrderStatus.CANCELLED)
+                .collect(Collectors.partitioningBy(
+                        order -> order.totalValue() >= threshold
+                ));
     }
 
     static Optional<Order> mostExpensiveDeliveredOrder(List<Order> orders) {
@@ -162,8 +177,10 @@ public class StreamApiTasks {
     }
 
     static DoubleSummaryStatistics activeOrderStatistics(List<Order> orders) {
-        // TODO: extra task
-        return new DoubleSummaryStatistics();
+        return orders.stream()
+                .filter(o -> o.status() != OrderStatus.CANCELLED)
+                .mapToDouble(Order::totalValue) // This is crucial: convert the Order stream to a DoubleStream
+                .summaryStatistics();
     }
 
     public static void main(String[] args) {
